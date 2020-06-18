@@ -9,6 +9,7 @@ RSpec.describe Assist::UI::MenuCommand do
       name        'help'
       aliases     %w[h ?]
       description 'Displays app usage'
+      handler     Class.new
 
       options do
         banner 'Usage: help [options]'
@@ -25,21 +26,11 @@ RSpec.describe Assist::UI::MenuCommand do
     end
   end
 
-  xdescribe 'attributes' do
+  describe 'attributes' do
     it 'should have getters for name, aliases and description' do
       expect(help_command.name).to eq('help')
       expect(help_command.description).to eq('Displays app usage')
       expect(help_command.aliases).to eq(%w[h ?])
-    end
-
-    it 'should have setters for name, aliases and description' do
-      help_command.name        = 'new_name'
-      help_command.description = 'new description'
-      help_command.aliases     = %w[one two]
-
-      expect(help_command.name).to eq('new_name')
-      expect(help_command.description).to eq('new description')
-      expect(help_command.aliases).to eq(%w[one two])
     end
   end
 

@@ -38,6 +38,10 @@ module Assist
         @aliases ||= new_aliases
       end
 
+      def handler(class_name)
+        @handler ||= class_name
+      end
+
       def args
         @args ||= {}
       end
