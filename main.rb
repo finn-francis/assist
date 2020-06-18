@@ -6,8 +6,8 @@ require_relative './lib/ui/prompt'
 module Assist
   class << self
     def init
-      prompt = Prompt.new
-      shell  = Shell.new(prompt: prompt)
+      prompt = UI::Prompt.new
+      shell  = UI::Shell.new(prompt: prompt)
       shell.start
     end
   end
