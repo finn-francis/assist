@@ -5,16 +5,18 @@ require 'optparse'
 module Assist
   module UI
     class MenuCommand
-      attr_accessor :name, :description, :aliases, :option_parser
+      attr_accessor :option_parser
 
       class Command
-        attr_accessor :banner
-
         def options
           @options ||= []
         end
 
-        def on(small_name, big_name, description, keyword:)
+        def banner(new_banner = nil)
+          @banner ||= new_banner
+        end
+
+        def option(keyword, small_name, big_name, description)
           options << {
             small_name: small_name,
             big_name: big_name,
@@ -24,13 +26,25 @@ module Assist
         end
       end
 
+      def name(new_name = nil)
+        @name ||= new_name
+      end
+
+      def description(new_desc = nil)
+        @description ||= new_desc
+      end
+
+      def aliases(new_aliases = [])
+        @aliases ||= new_aliases
+      end
+
       def args
         @args ||= {}
       end
 
-      def options
+      def options(&block)
         command = Command.new
-        yield(command)
+        command.instance_eval(&block)
 
         self.option_parser = OptionParser.new do |parser|
           parser.banner = command.banner
@@ -44,11 +58,9 @@ module Assist
       end
 
       class << self
-        def build
+        def build(&block)
           menu_command = self.new
-
-          yield(menu_command)
-
+          menu_command.instance_eval(&block)
           menu_command
         end
       end
