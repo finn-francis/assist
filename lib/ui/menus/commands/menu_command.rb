@@ -26,24 +26,26 @@ module Assist
         end
       end
 
-      def name(new_name = nil)
-        @name ||= new_name
-      end
-
-      def description(new_desc = nil)
-        @description ||= new_desc
-      end
-
-      def aliases(new_aliases = [])
-        @aliases ||= new_aliases
-      end
-
-      def handler(class_name)
-        @handler ||= class_name
+      def call
+        case handler
+        when :render then :render
+        when :exit then :exit
+        else
+          handler.call(args)
+        end
       end
 
       def args
         @args ||= {}
+      end
+
+      def render
+        puts [
+          self.name,
+          'Aliases: ' + [*self.aliases].join(', '),
+          "Usage: #{self.description}",
+          "\n"
+        ].join("\n")
       end
 
       def options(&block)
@@ -61,6 +63,22 @@ module Assist
         end
       end
 
+      def name(new_name = nil)
+        @name ||= new_name
+      end
+
+      def description(new_desc = nil)
+        @description ||= new_desc
+      end
+
+      def aliases(new_aliases = [])
+        @aliases ||= new_aliases
+      end
+
+      def handler(class_name = nil)
+        @handler ||= class_name
+      end
+
       class << self
         def build(&block)
           menu_command = self.new
@@ -68,9 +86,6 @@ module Assist
           menu_command
         end
       end
-    end
-
-    class MenuCommands
     end
   end
 end
