@@ -11,11 +11,14 @@ AllCops:
 
 Layout/LineLength:
   Max: 120
+  Exclude:
+    - "lib/ui/menus/**/*_menu.rb"
 
 Metrics/BlockLength:
   Exclude:
     - "**/*_spec.rb"
     - "config/routes.rb"
+    - "lib/ui/menus/**/*_menu.rb"
 
 Metrics/ClassLength:
   Max: 200
