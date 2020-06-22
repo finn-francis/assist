@@ -26,12 +26,14 @@ module Assist
         end
       end
 
-      def call
+      def call(arguments)
         case handler
         when :render then :render
         when :exit then :exit
         else
-          handler.call(args)
+          argument_list = arguments.split
+          option_parser&.parse!(argument_list)
+          handler.call(args, argument_list)
         end
       end
 
@@ -59,6 +61,10 @@ module Assist
             parser.on(option[:small_name], option[:big_name], option[:description]) do |result|
               args[option[:keyword]] = result
             end
+          end
+
+          parser.on('-h', '--help', 'Display options') do
+            puts parser
           end
         end
       end

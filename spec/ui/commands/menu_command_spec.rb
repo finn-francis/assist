@@ -41,7 +41,7 @@ RSpec.describe Assist::UI::MenuCommand do
           handler :exit
         end
 
-        expect(command.call).to eq(:exit)
+        expect(command.call('')).to eq(:exit)
       end
     end
 
@@ -51,7 +51,7 @@ RSpec.describe Assist::UI::MenuCommand do
           handler :render
         end
 
-        expect(command.call).to eq(:render)
+        expect(command.call('')).to eq(:render)
       end
     end
 
@@ -59,14 +59,14 @@ RSpec.describe Assist::UI::MenuCommand do
       it 'should call the #call method on the call handler' do
         command = described_class.build do
           class ClassHandlerTest
-            def call(_)
+            def call(_, _args = [])
               'called'
             end
           end
           handler ClassHandlerTest.new
         end
 
-        expect(command.call).to eq('called')
+        expect(command.call('')).to eq('called')
       end
     end
   end
