@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
 require 'readline'
+require_relative './menus/main_menu'
 
 module Assist
   module UI
     class Shell
       def initialize(prompt:)
         @prompt = prompt
+      end
+
+      def menu
+        @menu ||= Assist::UI::MainMenu.new
       end
 
       def start
@@ -16,14 +21,15 @@ module Assist
 
           input = ::Readline.readline(@prompt.to_s, '')
 
-          case command = input[/\w+/]
-          when 'exit'
+          case menu.handle_input(input)
+          when :exit
             exit_in = 0
-          when 'cd'
-            Dir.chdir(input.sub(command, '').strip)
-            puts Dir.getwd
+          when :render
+            menu.render
+          when :ok
+            true
           else
-            puts "#{input}: command not found" if system(input).nil? && !input.empty?
+            puts "#{input}: command not found\nRun `help` for options" if system(input).nil? && !input.empty?
           end
 
           exit_in = Float::INFINITY unless exit_in.zero?
