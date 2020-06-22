@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'readline'
+require_relative './menus/main_menu'
 
 module Assist
   module UI
@@ -9,32 +10,35 @@ module Assist
         @prompt = prompt
       end
 
+      def menu
+        @menu ||= Assist::UI::MainMenu.new
+      end
+
       def start
         exit_in = Float::INFINITY
         loop do
-          begin
-            break if exit_in < 1
+          break if exit_in < 1
 
-            input = ::Readline.readline(@prompt.to_s, '')
+          input = ::Readline.readline(@prompt.to_s, '')
 
-            case command = input[/\w+/]
-            when 'exit'
-              exit_in = 0
-            when 'cd'
-              Dir.chdir(input.sub(command, '').strip)
-              puts Dir.getwd
-            else
-              puts "#{input}: command not found" if system(input).nil? && !input.empty?
-            end
-
-            exit_in = Float::INFINITY unless exit_in.zero?
-
-          # Interrupt is called when we press ctrl+c, rescuing it will allow
-          # us to keep usual commandline ctrl+c functionality
-          rescue Interrupt
-            exit_in = exit_in == 1 ? 0 : 1
-            print "\n"
+          case menu.handle_input(input)
+          when :exit
+            exit_in = 0
+          when :render
+            menu.render
+          when :ok
+            true
+          else
+            puts "#{input}: command not found\nRun `help` for options" if system(input).nil? && !input.empty?
           end
+
+          exit_in = Float::INFINITY unless exit_in.zero?
+
+        # Interrupt is called when we press ctrl+c, rescuing it will allow
+        # us to keep usual commandline ctrl+c functionality
+        rescue Interrupt
+          exit_in = exit_in == 1 ? 0 : 1
+          print "\n"
         end
 
         puts 'Exiting...'
