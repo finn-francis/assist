@@ -65,6 +65,7 @@ module Assist
 
           parser.on('-h', '--help', 'Display options') do
             puts parser
+            args[:help] = true
           end
         end
       end

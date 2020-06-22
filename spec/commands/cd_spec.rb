@@ -7,7 +7,7 @@ RSpec.describe Assist::Commands::CD do
   describe '#call' do
     context 'with argument: -h' do
       it 'should return :ok' do
-        expect(described_class.call('', %w[-h])).to eq(:ok)
+        expect(described_class.call({ help: true }, ['cd'])).to eq(:ok)
       end
     end
 
@@ -18,18 +18,18 @@ RSpec.describe Assist::Commands::CD do
 
         expect(dir_module).to receive(:chdir).with('/my/route')
 
-        described_class.call('cd', %w[cd /my/route])
+        described_class.call({}, %w[cd /my/route])
       end
 
       context 'the directory does not exist' do
         it 'should return :error' do
-          expect(described_class.call('cd', %w[cd non/existant/route])).to eq(:error)
+          expect(described_class.call({}, %w[cd non/existant/route])).to eq(:error)
         end
       end
 
       context 'the directory does exist' do
         it 'should return :ok' do
-          expect(described_class.call('cd', %w[cd spec])).to eq(:ok)
+          expect(described_class.call({}, %w[cd spec])).to eq(:ok)
         end
       end
     end

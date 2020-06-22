@@ -15,7 +15,6 @@ module Assist
 
           options do
             banner 'Usage: help [options]'
-            option :verbose, '-v', '--[no]-verbose', 'Displays verbose'
           end
         end
 
