@@ -1,2 +1,5 @@
 **/*.swp
 
+workspace_config.json
+.assist/
+
