@@ -2,3 +2,5 @@
 
 require 'rspec'
 require 'pry'
+
+ENV['TEST'] = '1'
